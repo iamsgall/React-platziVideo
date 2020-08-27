@@ -1,26 +1,51 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
+// Hooks
+import useInitialState from './hooks/useInitialState';
+
+// Components
+import Header from './components/header/Header';
+import Search from './components/search/Search';
+import Categories from './components/categories/Categories';
+import Carousel from './components/carousel/Carousel';
+import CarouselItem from './components/carouselItem/CarouselItem';
+import Footer from './components/footer/Footer';
+
+const API = 'http://127.0.0.1:8080/initialState';
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const initialState = useInitialState(API);
+	console.log(initialState);
+	return (
+		<div>
+			<Header />
+			<Search />
+			{initialState.mylist.length > 0 && (
+				<Categories title={'My List'}>
+					<Carousel>
+						{initialState.mylist.map((item) => (
+							<CarouselItem key={item.id} {...item} />
+						))}
+					</Carousel>
+				</Categories>
+			)}
+			<Categories title={'Trends'}>
+				<Carousel>
+					{initialState.trends.map((item) => (
+						<CarouselItem key={item.id} {...item} />
+					))}
+				</Carousel>
+			</Categories>
+			<Categories title={'Originals Platzi-Video'}>
+				<Carousel>
+					{initialState.originals.map((item) => (
+						<CarouselItem key={item.id} {...item} />
+					))}
+				</Carousel>
+			</Categories>
+			<Footer />
+		</div>
+	);
 }
 
 export default App;
